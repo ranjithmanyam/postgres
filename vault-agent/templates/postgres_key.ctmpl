@@ -1,0 +1,3 @@
+{{ with secret "secret/data/postgres/certs" }}
+{{ .Data.key }}
+{{ end }}

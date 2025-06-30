@@ -1,0 +1,3 @@
+# Render to .env
+POSTGRES_USER={{ with secret "secret/data/postgres/auth" }}{{ .Data.data.username }}{{ end }}
+POSTGRES_PASSWORD={{ with secret "secret/data/postgres/auth" }}{{ .Data.data.password }}{{ end }}

@@ -1,0 +1,3 @@
+{{ with secret "secret/data/pgadmin/certs" }}
+{{ .Data.data.key }}
+{{ end }}

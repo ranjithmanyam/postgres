@@ -1,0 +1,60 @@
+vault {
+  address = "https://vault.devdotweb.com"
+
+}
+
+auto_auth {
+  method "token_file" {
+    config = {
+      token_file_path = "/secrets/vault-token"
+    }
+  }
+
+  sink "file" {
+    config = {
+      path = "/vault-token"
+    }
+  }
+}
+
+template {
+  source      = "/vault-agent/templates/root-ca.ctmpl"
+  destination = "/output/ca/ca.cert.pem"
+  perms       = 0644
+}
+
+template {
+  source      = "/vault-agent/templates/pgadmin.ctmpl"
+  destination = "/output/pgadmin/.env"
+  perms       = 0600
+}
+
+template {
+  source      = "/vault-agent/templates/pgadmin_cert.ctmpl"
+  destination = "/certs/pgadmin/pgadmin.crt"
+  perms       = 0644
+}
+
+template {
+  source      = "/vault-agent/templates/pgadmin_key.ctmpl"
+  destination = "/certs/pgadmin/pgadmin.key"
+  perms       = 0600
+}
+
+template {
+  source      = "/vault-agent/templates/postgres.ctmpl"
+  destination = "/output/postgres/.env"
+  perms       = 0600
+}
+
+template {
+  source      = "/vault-agent/templates/postgres_cert.ctmpl"
+  destination = "/certs/postgres/postgres.crt"
+  perms       = 0644
+}
+
+template {
+  source      = "/vault-agent/templates/postgres_key.ctmpl"
+  destination = "/certs/postgres/postgres.key"
+  perms       = 0600
+}

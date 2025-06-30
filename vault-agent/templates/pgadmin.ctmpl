@@ -1,0 +1,2 @@
+PGADMIN_DEFAULT_EMAIL={{ with secret "secret/data/pgadmin/auth" }}{{ .Data.data.email }}{{ end }}
+PGADMIN_DEFAULT_PASSWORD={{ with secret "secret/data/pgadmin/auth" }}{{ .Data.data.password }}{{ end }}

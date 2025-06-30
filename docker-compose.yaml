@@ -1,0 +1,57 @@
+services:
+  vault-agent:
+    image: hashicorp/vault:1.19
+    container_name: vault-agent
+    entrypoint: >
+      vault agent -config=/vault-agent/vault-agent.hcl -exit-after-auth
+    volumes:
+      - ./vault-agent:/vault-agent:ro
+      - /var/lib/vault:/secrets:ro
+      - /data/pgadmin/certs:/certs/pgadmin
+      - /data/postgres/certs:/certs/postgres
+      - /data/pgadmin/env:/output/pgadmin
+      - /data/postgres/env:/output/postgres
+      - /data/ca:/output/ca
+    restart: "no"
+
+  db:
+    image: postgres:16.9-bullseye
+    container_name: postgres
+    env_file: /data/postgres/env/.env
+    volumes:
+      - /data/postgres/data:/var/lib/postgresql/data
+      - /data/postgres/certs:/var/lib/postgresql/certs:ro
+      - /data/ca:/var/lib/postgresql/ca:ro
+      - ./conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    ports:
+      - "5432:5432"
+    command: ["-c", "config_file=/etc/postgresql/postgresql.conf"]
+    depends_on:
+      - vault-agent
+
+  pgadmin:
+    image: dpage/pgadmin4:8.4
+    container_name: pgadmin
+    env_file: /data/pgadmin/env/.env
+    environment:
+      PGADMIN_ENABLE_TLS: "True"
+      PGADMIN_TLS_CERT: "/certs/pgadmin/pgadmin.crt"
+      PGADMIN_TLS_KEY: "/certs/pgadmin/pgadmin.key"
+    ports:
+      - "5443:443"
+    volumes:
+      - /data/pgadmin/data:/var/lib/pgadmin
+      - /data/pgadmin/certs:/certs/pgadmin:ro
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.vault.rule=Host(`pgadmin.devdotweb.com`)"
+#      - "traefik.http.routers.vault.entrypoints=https"
+#      - "traefik.http.routers.vault.tls.certresolver=cloudflare"
+#      - "traefik.http.services.vault.loadbalancer.server.url=https://vault:8200"
+#      - "traefik.http.services.vault.loadbalancer.serversTransport=vault-transport@file"
+    depends_on:
+      - vault-agent
+
+networks:
+  backend:
+    external: true
