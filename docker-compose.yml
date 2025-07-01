@@ -13,6 +13,8 @@ services:
       - /data/postgres/env:/output/postgres
       - /data/ca:/output/ca
     restart: "no"
+    networks:
+      - frontend
 
   db:
     image: postgres:16.9-bullseye
@@ -28,6 +30,8 @@ services:
     command: ["-c", "config_file=/etc/postgresql/postgresql.conf"]
     depends_on:
       - vault-agent
+    networks:
+      - frontend
 
   pgadmin:
     image: dpage/pgadmin4:8.4
@@ -42,6 +46,9 @@ services:
     volumes:
       - /data/pgadmin/data:/var/lib/pgadmin
       - /data/pgadmin/certs:/certs/pgadmin:ro
+    networks:
+      - frontend
+      - backend
 #    labels:
 #      - "traefik.enable=true"
 #      - "traefik.http.routers.vault.rule=Host(`pgadmin.devdotweb.com`)"
@@ -54,4 +61,6 @@ services:
 
 networks:
   backend:
+    external: true
+  frontend:
     external: true
