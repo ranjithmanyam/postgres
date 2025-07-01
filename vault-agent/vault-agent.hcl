@@ -1,6 +1,6 @@
 vault {
   address = "https://vault:8200"
-  tls_ca_file = "/ca/ca.cert.pem"
+  tls_ca_file = "/ca/ca-chain.cert.pem"
 }
 
 auto_auth {
