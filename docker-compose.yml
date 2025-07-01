@@ -11,7 +11,7 @@ services:
       - /data/postgres/certs:/certs/postgres
       - /data/pgadmin/env:/output/pgadmin
       - /data/postgres/env:/output/postgres
-      - /data/ca:/output/ca
+      - ./ca:/ca
     restart: "no"
     networks:
       - frontend

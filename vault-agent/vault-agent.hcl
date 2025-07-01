@@ -1,6 +1,6 @@
 vault {
-  address = "https://vault.devdotweb.com"
-
+  address = "https://vault:8200"
+  tls_ca_file = "/ca/ca.cert.pem"
 }
 
 auto_auth {
