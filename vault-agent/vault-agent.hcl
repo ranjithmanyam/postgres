@@ -1,6 +1,6 @@
 vault {
   address = "https://vault:8200"
-  tls_ca_file = "/ca/ca-chain.cert.pem"
+  tls_ca_file = "/etc/ssl/certs/ca-certificates.crt"
 }
 
 auto_auth {
@@ -25,13 +25,13 @@ template {
 
 template {
   source      = "/vault-agent/templates/pgadmin_cert.ctmpl"
-  destination = "/certs/pgadmin/pgadmin.crt"
+  destination = "/output/certs/pgadmin/pgadmin.crt"
   perms       = 0644
 }
 
 template {
   source      = "/vault-agent/templates/pgadmin_key.ctmpl"
-  destination = "/certs/pgadmin/pgadmin.key"
+  destination = "/output/certs/pgadmin/pgadmin.key"
   perms       = 0600
 }
 
@@ -43,12 +43,12 @@ template {
 
 template {
   source      = "/vault-agent/templates/postgres_cert.ctmpl"
-  destination = "/certs/postgres/postgres.crt"
+  destination = "/output/certs/postgres/postgres.crt"
   perms       = 0644
 }
 
 template {
   source      = "/vault-agent/templates/postgres_key.ctmpl"
-  destination = "/certs/postgres/postgres.key"
+  destination = "/output/certs/postgres/postgres.key"
   perms       = 0600
 }
