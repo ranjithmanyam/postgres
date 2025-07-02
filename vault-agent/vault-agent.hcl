@@ -18,12 +18,6 @@ auto_auth {
 }
 
 template {
-  source      = "/vault-agent/templates/root-ca.ctmpl"
-  destination = "/output/ca/ca.cert.pem"
-  perms       = 0644
-}
-
-template {
   source      = "/vault-agent/templates/pgadmin.ctmpl"
   destination = "/output/pgadmin/.env"
   perms       = 0600
