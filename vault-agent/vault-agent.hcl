@@ -19,7 +19,7 @@ auto_auth {
 
 template {
   source      = "/vault-agent/templates/pgadmin.ctmpl"
-  destination = "/output/pgadmin/.env"
+  destination = "/output/pgadmin/.env_pgadmin"
   perms       = 0600
   command     = "chown 5050:5050 /output/pgadmin/.env_pgadmin"
 }
@@ -40,7 +40,7 @@ template {
 
 template {
   source      = "/vault-agent/templates/postgres.ctmpl"
-  destination = "/output/postgres/.env"
+  destination = "/output/postgres/.env_postgres"
   perms       = 0600
   command     = "chown 999:999 /output/postgres/.env_postgres"
 }
