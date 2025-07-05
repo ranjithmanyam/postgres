@@ -9,8 +9,7 @@ services:
       - /var/lib/vault:/secrets:ro
       - /data/pgadmin/certs:/output/certs/pgadmin
       - /data/postgres/certs:/output/certs/postgres
-      - ./:/output/pgadmin
-      - ./:/output/postgres
+      - ./secrets:/output/secrets
       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
     restart: "no"
     networks:
@@ -19,24 +18,34 @@ services:
   db:
     image: postgres:16.9-bullseye
     container_name: postgres
-    env_file: ./.env_postgres
     volumes:
       - /data/postgres/data:/var/lib/postgresql/data
       - /data/postgres/certs:/var/lib/postgresql/certs:ro
       - /data/ca:/var/lib/postgresql/ca:ro
+      - ./secrets:/secrets:ro
       - ./conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
     ports:
       - "5432:5432"
-    command: ["-c", "config_file=/etc/postgresql/postgresql.conf"]
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Waiting for .env_postgres...' &&
+      while [ ! -f /secrets/.env_postgres ] || [ ! -r /secrets/.env_postgres ]; do
+        sleep 1;
+      done;
+      echo '.env_postgres found and readable. Loading environment variables...';
+      # Load environment variables from the file
+      set -a; source /secrets/.env_postgres; set +a;
+      # Execute the original command
+      exec postgres -c config_file=/etc/postgresql/postgresql.conf
+      "
     depends_on:
       - vault-agent
     networks:
-      - frontend
+      - backend
 
   pgadmin:
     image: dpage/pgadmin4:8.4
     container_name: pgadmin
-    env_file: ./.env_pgadmin
     environment:
       PGADMIN_ENABLE_TLS: "True"
       PGADMIN_TLS_CERT: "/certs/pgadmin/pgadmin.crt"
@@ -46,6 +55,19 @@ services:
     volumes:
       - /data/pgadmin/data:/var/lib/pgadmin
       - /data/pgadmin/certs:/certs/pgadmin:ro
+      - ./secrets:/secrets:ro
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Waiting for .env_pgadmin...' &&
+      while [ ! -f /secrets/.env_pgadmin ] || [ ! -r /secrets/.env_pgadmin ]; do
+        sleep 1;
+      done;
+      echo '.env_pgadmin found and readable. Loading environment variables...';
+      # Load environment variables from the file
+      set -a; source /secrets/.env_pgadmin; set +a;
+      # Execute the original entrypoint/command for pgadmin
+      /entrypoint.sh # This is the default entrypoint for dpage/pgadmin4
+      "
     networks:
       - frontend
       - backend
