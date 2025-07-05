@@ -9,8 +9,8 @@ services:
       - /var/lib/vault:/secrets:ro
       - /data/pgadmin/certs:/output/certs/pgadmin
       - /data/postgres/certs:/output/certs/postgres
-      - /data/pgadmin/env:/output/pgadmin
-      - /data/postgres/env:/output/postgres
+      - ./:/output/pgadmin
+      - ./:/output/postgres
       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
     restart: "no"
     networks:
@@ -19,7 +19,7 @@ services:
   db:
     image: postgres:16.9-bullseye
     container_name: postgres
-    env_file: /data/postgres/env/.env
+    env_file: ./.env_postgres
     volumes:
       - /data/postgres/data:/var/lib/postgresql/data
       - /data/postgres/certs:/var/lib/postgresql/certs:ro
@@ -36,7 +36,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4:8.4
     container_name: pgadmin
-    env_file: /data/pgadmin/env/.env
+    env_file: ./.env_pgadmin
     environment:
       PGADMIN_ENABLE_TLS: "True"
       PGADMIN_TLS_CERT: "/certs/pgadmin/pgadmin.crt"
