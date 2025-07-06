@@ -14,7 +14,6 @@ services:
     restart: "no"
     networks:
       - frontend
-
   db:
     image: postgres:16.9-bullseye
     container_name: postgres
@@ -26,7 +25,7 @@ services:
       - ./conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
     ports:
       - "5432:5432"
-    entrypoint: >
+    entrypoint: |
       /bin/sh -c "
       echo 'Waiting for .env_postgres...' &&
       while [ ! -f /secrets/.env_postgres ] || [ ! -r /secrets/.env_postgres ]; do
@@ -36,13 +35,12 @@ services:
       # Load environment variables from the file
       set -a; source /secrets/.env_postgres; set +a;
       # Execute the original command
-      exec postgres -c config_file=/etc/postgresql/postgresql.conf
+      exec gosu postgres postgres -c config_file=/etc/postgresql/postgresql.conf
       "
     depends_on:
       - vault-agent
     networks:
       - backend
-
   pgadmin:
     image: dpage/pgadmin4:8.4
     container_name: pgadmin
@@ -56,7 +54,7 @@ services:
       - /data/pgadmin/data:/var/lib/pgadmin
       - /data/pgadmin/certs:/certs/pgadmin:ro
       - ./secrets:/secrets:ro
-    entrypoint: >
+    entrypoint: |
       /bin/sh -c "
       echo 'Waiting for .env_pgadmin...' &&
       while [ ! -f /secrets/.env_pgadmin ] || [ ! -r /secrets/.env_pgadmin ]; do
