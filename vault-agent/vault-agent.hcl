@@ -26,16 +26,16 @@ template {
 
 template {
   source      = "/vault-agent/templates/pgadmin_cert.ctmpl"
-  destination = "/output/certs/pgadmin/pgadmin.crt"
+  destination = "/output/certs/pgadmin/server.cert"
   perms       = 0644
-  command     = "chown 5050:5050 /output/certs/pgadmin/pgadmin.crt"
+  command     = "chown 5050:5050 /output/certs/pgadmin/server.cert"
 }
 
 template {
   source      = "/vault-agent/templates/pgadmin_key.ctmpl"
-  destination = "/output/certs/pgadmin/pgadmin.key"
+  destination = "/output/certs/pgadmin/server.key"
   perms       = 0600
-  command     = "chown 5050:5050 /output/certs/pgadmin/pgadmin.key"
+  command     = "chown 5050:5050 /output/certs/pgadmin/server.key"
 }
 
 template {
