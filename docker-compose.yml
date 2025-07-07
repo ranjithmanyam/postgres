@@ -33,7 +33,7 @@ services:
       done;
       echo '.env_postgres found and readable. Loading environment variables...';
       # Load environment variables from the file
-      set -a; source /secrets/.env_postgres; set +a;
+      set -a; . /secrets/.env_postgres; set +a;
       # Execute the original command
       exec gosu postgres postgres -c config_file=/etc/postgresql/postgresql.conf
       "
@@ -62,7 +62,7 @@ services:
       done;
       echo '.env_pgadmin found and readable. Loading environment variables...';
       # Load environment variables from the file
-      set -a; source /secrets/.env_pgadmin; set +a;
+      set -a; . /secrets/.env_pgadmin; set +a;
       # Execute the original entrypoint/command for pgadmin
       /entrypoint.sh # This is the default entrypoint for dpage/pgadmin4
       "
