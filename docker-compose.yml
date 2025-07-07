@@ -46,13 +46,13 @@ services:
     container_name: pgadmin
     environment:
       PGADMIN_ENABLE_TLS: "True"
-      PGADMIN_TLS_CERT: "/certs/pgadmin/pgadmin.crt"
-      PGADMIN_TLS_KEY: "/certs/pgadmin/pgadmin.key"
+      PGADMIN_TLS_CERT: "/certs/server.cert"
+      PGADMIN_TLS_KEY: "/certs/server.key"
     ports:
       - "5443:443"
     volumes:
       - /data/pgadmin/data:/var/lib/pgadmin
-      - /data/pgadmin/certs:/certs/pgadmin:ro
+      - /data/pgadmin/certs:/certs:ro
       - ./secrets:/secrets:ro
     entrypoint: |
       /bin/sh -c "
