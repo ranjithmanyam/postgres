@@ -74,7 +74,7 @@ services:
       - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.devdotweb.com`)"
       - "traefik.http.routers.pgadmin.entrypoints=https"
       - "traefik.http.routers.pgadmin.tls.certresolver=cloudflare"
-      - "traefik.http.services.pgadmin.loadbalancer.server.url=https://pgadmin:5443"
+      - "traefik.http.services.pgadmin.loadbalancer.server.url=https://pgadmin:443"
       - "traefik.http.services.pgadmin.loadbalancer.serversTransport=pgadmin-transport@file"
     depends_on:
       - vault-agent
