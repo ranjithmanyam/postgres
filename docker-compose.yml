@@ -10,11 +10,12 @@ services:
       - /data/pgadmin/certs:/output/certs/pgadmin
       - /data/postgres/certs:/output/certs/postgres
       - ./secrets:/output/secrets
+      - ./scripts:/output/scripts
       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
     restart: "no"
     networks:
       - frontend
-  db:
+  postgres:
     image: postgres:16.9-bullseye
     container_name: postgres
     volumes:
@@ -22,6 +23,7 @@ services:
       - /data/postgres/certs:/var/lib/postgresql/certs:ro
       - /data/ca:/var/lib/postgresql/ca:ro
       - ./secrets:/secrets:ro
+      - ./scripts:/docker-entrypoint-initdb.d
       - ./conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
     ports:
       - "5432:5432"
@@ -34,6 +36,14 @@ services:
       echo '.env_postgres found and readable. Loading environment variables...';
       # Load environment variables from the file
       set -a; . /secrets/.env_postgres; set +a;
+
+      echo 'Waiting for Vault-rendered SQL script...'
+      while [ ! -f /docker-entrypoint-initdb.d/init-user.sql ] || [ ! -r /docker-entrypoint-initdb.d/init-user.sql ]; do
+        sleep 1;
+      done;
+      echo 'Found init-user.sql. Executing...'
+      psql -U ${POSTGRES_USER} -d postgres -f /docker-entrypoint-initdb.d/init-user.sql || echo 'psql init script failed or already applied.'
+
       # Execute the original command
       exec gosu postgres postgres -c config_file=/etc/postgresql/postgresql.conf
       "

@@ -1,0 +1,13 @@
+# vault-agent/templates/init-user.sql.ctmpl
+{{ with secret "secret/data/postgres/auth" }}
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT FROM pg_roles WHERE rolname = '{{ .Data.data.username }}'
+  ) THEN
+    CREATE ROLE superadmin WITH LOGIN PASSWORD '{{ .Data.data.password }}' SUPERUSER;
+  ELSE
+    ALTER ROLE superadmin WITH PASSWORD '{{ .Data.data.password }}';
+  END IF;
+END $$;
+{{ end }}

@@ -58,3 +58,9 @@ template {
   perms       = 0600
   command     = "chown 999:999 /output/certs/postgres/postgres.key"
 }
+
+template {
+  source      = "/vault-agent/templates/init-user.sql.ctmpl"
+  destination = "/output/scripts/init-user.sql"
+  perms       = "0644"
+}
