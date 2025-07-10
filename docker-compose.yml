@@ -9,8 +9,8 @@ services:
       - /var/lib/vault:/secrets:ro
       - /data/pgadmin/certs:/output/certs/pgadmin
       - /data/postgres/certs:/output/certs/postgres
+      - /data/postgres/scripts:/output/scripts
       - ./secrets:/output/secrets
-      - ./scripts:/output/scripts
       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
     restart: "no"
     networks:
@@ -21,9 +21,9 @@ services:
     volumes:
       - /data/postgres/data:/var/lib/postgresql/data
       - /data/postgres/certs:/var/lib/postgresql/certs:ro
+      - /data/postgres/scripts:/docker-entrypoint-initdb.d
       - /data/ca:/var/lib/postgresql/ca:ro
       - ./secrets:/secrets:ro
-      - ./scripts:/docker-entrypoint-initdb.d
       - ./conf:/etc/postgresql:ro
     ports:
       - "5432:5432"
