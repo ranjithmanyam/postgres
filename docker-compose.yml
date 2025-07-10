@@ -24,7 +24,7 @@ services:
       - /data/ca:/var/lib/postgresql/ca:ro
       - ./secrets:/secrets:ro
       - ./scripts:/docker-entrypoint-initdb.d
-      - ./conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./conf:/etc/postgresql:ro
     ports:
       - "5432:5432"
     entrypoint: |
