@@ -2,4 +2,4 @@
 .env*
 docker-compose-local.yaml
 certs/
-scripts/
+scripts/*
