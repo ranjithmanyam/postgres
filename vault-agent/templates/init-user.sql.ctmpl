@@ -1,4 +1,5 @@
 # vault-agent/templates/init-user.sql.ctmpl
+# Add `tf-postgres-user` in the template too so that no need to create the user manually later using ./scripts/create-user.sh
 {{ with secret "secret/data/postgres/auth" }}
 DO $$
 BEGIN
