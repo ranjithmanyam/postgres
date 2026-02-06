@@ -1,0 +1,3 @@
+{{- with secret "secret/data/ca" -}}
+{{- index .Data.data "ca.cert.pem" -}}
+{{- end -}}

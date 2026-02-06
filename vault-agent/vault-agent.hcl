@@ -64,3 +64,10 @@ template {
   destination = "/output/scripts/init-user.sql"
   perms       = "0644"
 }
+
+template {
+  source      = "/vault-agent/templates/ca_crt.ctmpl"
+  destination = "/output/certs/postgres/ca-certificates.crt"
+  perms       = 0644
+  command     = "chown 999:999 /output/certs/postgres/ca-certificates.crt"
+}
